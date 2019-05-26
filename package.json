@@ -9,6 +9,7 @@
   "author": "Joakim O. Andersen, Anders Tofte, Nicklas Hermann, Daniel Bøbel, Casper B. Arnesen",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "mongodb": "^3.2.4",
