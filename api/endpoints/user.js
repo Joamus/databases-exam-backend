@@ -25,7 +25,10 @@ function updateUser() {
 }
 
 function postUser() {
-
+    app.post('/api/users/create', (req, res) => {
+        console.log(req.body)
+        // TODO: opret en record baseret på req.body
+    })
 }
 
 function getAllUsers() {

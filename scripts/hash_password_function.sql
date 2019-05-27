@@ -1,3 +1,5 @@
+USE db_exam;
+
 DELIMITER // 
 
 CREATE FUNCTION hash_password(v_new_password varchar(255))

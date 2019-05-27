@@ -1,3 +1,5 @@
+USE db_exam;
+
 DELIMITER //
 
 CREATE TRIGGER user_before_update

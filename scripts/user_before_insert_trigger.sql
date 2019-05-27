@@ -1,3 +1,5 @@
+USE db_exam;
+
 DELIMITER //
 
 CREATE TRIGGER user_before_insert
@@ -9,5 +11,3 @@ BEGIN
 SET NEW.password = hash_password(NEW.password);
 
 END; //
-
-drop trigger hash_password;

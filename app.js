@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const app = express();
+const bodyParser = require('body-parser');
 const mysqlDb = require('./database/mysql/db')
 const mongoDb = require('./database/mongodb/db')
 const { api } = require('./config')
@@ -8,6 +9,9 @@ const { api } = require('./config')
 const userEndpoints = require('./api/endpoints/user')
 const productEndpoints = require('./api/endpoints/product')
 const basketEndpoints = require('./api/endpoints/basket')
+
+// support parsing of application/json type post data
+app.use(bodyParser.json());
 
 let user
 let city
