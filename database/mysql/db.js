@@ -7,20 +7,21 @@ const purchaseSchema = require('./models/purchase')
 
 const options = { 
   freezeTableName: true, 
-  underscored: true
+  underscored: true,
 }
 
 
 
 module.exports.db = new Sequelize(mysql.dbName, mysql.username, mysql.password, {
         host: mysql.host,
-        dialect: mysql.dialect
+        dialect: mysql.dialect,
+        logging: false,
       });
 
 module.exports.authenticateDb = function() {
   module.exports.db.authenticate()
   .then(() => {
-    console.log('Connection has been established successfully.');
+    console.log('MySQL connected...');
   })
   .catch(err => {
     console.error('Unable to connect to the database:', err);
@@ -45,7 +46,6 @@ async function synchronizeModels(user, city, purchase) {
   await city.sync()
   await user.sync()
   await purchase.sync()
-  console.log('purchase done')
 
 }
 

@@ -36,6 +36,10 @@ function initializeDbs() {
 }
 
 function initializeEndpoints() {
+
+    userEndpoints()
+    
+
     app.listen(api.port, () => {
         console.log(`Node server listening on port ${api.port}...`)
     })
@@ -56,11 +60,51 @@ function main() {
     
 }
 
+function userEndpoints() {
+
+    app.post('/api/user', (req, res) => {
+
+    })
+
+    app.get('/api/user/:id', (req, res) => {
+
+    })
+
+
+}
+
+function productEndpoints() {
+
+    app.get('/api/product', (req, res) => {
+
+    })
+
+    app.get('/api/product/:id', (req, res) => {
+
+    })
+
+    app.delete('/api/product/:id', (req, res) => {
+
+    })
+
+}
+
+function basketEndpoints() {
+    app.get('/api/basket/:userId', (req, res) => {
+
+    })
+
+    app.get('/api/basket/:basketId', (req, res) => {
+        
+    })
+
+}
+
 function getCities() {
     axios.get('https://dawa.aws.dk/postnumre')
     .then((response) => {
         let cities = [];
-       // console.log(response.data)
+
 
         for (let i = 0; i < response.data.length; i++) {
             let newCity = {}
@@ -70,10 +114,10 @@ function getCities() {
         }
 
         city.bulkCreate(cities, {
-            updateOnDuplicate: ["name"]
+            updateOnDuplicate: ["postal_code"]
         })
         .then(() => {
-            console.log('Cities created..')
+            console.log('Cities fetched..')
         })
         
 

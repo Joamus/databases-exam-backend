@@ -4,10 +4,12 @@ const { mongodb } = require('../../config')
 
 module.exports.getDb = function(callback) {
 
-    MongoClient.connect(mongodb.url, { useNewUrlParser: true }, function(err, db) {
+    MongoClient.connect(mongodb.url, { useNewUrlParser: true }, function(err, client) {
         if (err) throw err;
         console.log("MongoDB connected...");
-        callback(err, db)
+
+        const examDb = client.db(mongodb.db)
+        callback(err, examDb)
       });
 
 }
