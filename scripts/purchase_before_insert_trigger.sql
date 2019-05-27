@@ -1,7 +1,9 @@
+user_before_insert
+
 DELIMITER //
 
 
-CREATE TRIGGER check_user_id
+CREATE TRIGGER purchase_before_insert
 BEFORE INSERT
 ON purchase FOR EACH ROW
 
@@ -12,3 +14,4 @@ IF (NEW.user_id IS null) THEN
 END IF;
 
 END; //
+

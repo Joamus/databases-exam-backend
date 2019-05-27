@@ -1,3 +1,5 @@
+USE db_exam;
+
 DELIMITER // 
 
 CREATE PROCEDURE reset_password
