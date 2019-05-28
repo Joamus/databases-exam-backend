@@ -51,8 +51,24 @@ function authenticateRequest(req, res, next) {
     }
 }
 
+function requireRole(roles) {
+  
+  return function(req, res, next) {
+
+    if (res.locals.user && roles.includes(res.locals.user.role)) {  
+      next()
+    } else {
+      res.status(403).json({message: "Not authorized"})
+
+
+    }
+  }
+
+}
+
 module.exports = {
   verifyToken,
   generateToken,
-  authenticateRequest
+  authenticateRequest,
+  requireRole
 }
