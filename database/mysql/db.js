@@ -91,7 +91,7 @@ async function getCities(city, callback) {
       let cities = [];
       for (let i = 0; i < response.data.length; i++) {
           let newCity = {}
-          newCity.postal_code = response.data[i].nr
+          newCity.postalCode = response.data[i].nr
           newCity.name = response.data[i].navn
           cities.push(newCity)
       }

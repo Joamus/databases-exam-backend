@@ -17,6 +17,7 @@ module.exports.initialize = function (newApp, newMysqlModels, newMysqlDb) {
 
 
 function getUser() {
+
     app.get('/api/users/:userId', (req, res) => {
         mysqlModels.user.findOne({ where: { id: req.params.userId }})
         .then(queryRes => {
