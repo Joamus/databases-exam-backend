@@ -1,7 +1,9 @@
-let app 
+let app
+let mysqlModels
 
-module.exports.initialize = function (expressApp) {
-    app = expressApp
+module.exports.initialize = function (newApp, newMysqlModels) {
+    app = newApp
+    mysqlModels = newMysqlModels
 
     getUser()
     deleteUser()
@@ -13,6 +15,7 @@ module.exports.initialize = function (expressApp) {
 
 
 function getUser() {
+    
 
 }
 
