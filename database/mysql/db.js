@@ -11,14 +11,17 @@ const userSeed = require('./seeds/user')
 const purchaseSeed = require('./seeds/purchase')
 
 
+// I module.export everything at the bottom
+let user
+let city
+let purchase
+
 const options = { 
   freezeTableName: true, 
   underscored: true,
 }
 
-
-
-module.exports.db = new Sequelize(mysql.dbName, mysql.username, mysql.password, {
+db = new Sequelize(mysql.dbName, mysql.username, mysql.password, {
   define: {
     charset: 'utf8',
     collate: 'utf8_general_ci'
@@ -28,8 +31,10 @@ module.exports.db = new Sequelize(mysql.dbName, mysql.username, mysql.password, 
   logging: false,
 });
 
+
+
 async function authenticateDb(callback) {
-  module.exports.db.authenticate()
+  db.authenticate()
   .then(() => {
     console.log('[MySQL] Connected ...');
     callback()
@@ -39,30 +44,24 @@ async function authenticateDb(callback) {
   });
 }
 
-module.exports.initialize = function(callback) {
+function initialize (callback) {
   authenticateDb(() => {
-    initializeModels((user, city, purchase) => {
+    user = db.define('user', userSchema, options)
+    city = db.define('city', citySchema, options)
+    purchase = db.define('purchase', purchaseSchema, options)
       makeTableAssociations(user, city, purchase)
       synchronizeModels(user, city, purchase)
       getCities(city, () => {
         seedTables(user, purchase)
-        callback(user, city, purchase)
+
+        let models = {
+          user, city, purchase
+        }
+        callback(models)
       })
-      
-    })
 
   })
   
-}
-
-function initializeModels(callback) {
-
-  let user = module.exports.db.define('user', userSchema, options)
-  let city = module.exports.db.define('city', citySchema, options)
-  let purchase = module.exports.db.define('purchase', purchaseSchema, options)
-  
-  callback(user, city, purchase)
-
 }
 
 async function synchronizeModels(user, city, purchase) {
@@ -116,4 +115,12 @@ async function getCities(city, callback) {
 
   })
 
+}
+
+module.exports = {
+  user,
+  city,
+  purchase,
+  db,
+  initialize
 }

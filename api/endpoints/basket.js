@@ -1,7 +1,9 @@
 let app
+let mysqlModels
 
-module.exports.initialize = function(expressApp) {
-    app = expressApp
+module.exports.initialize = function(newApp, newMysqlModes) {
+    app = newApp
+    mysqlModels = newMysqlModes
     
     getBasket()
     deleteBasket()

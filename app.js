@@ -9,11 +9,6 @@ const userEndpoints = require('./api/endpoints/user')
 const productEndpoints = require('./api/endpoints/product')
 const basketEndpoints = require('./api/endpoints/basket')
 
-let user
-let city
-let purchase
-
-
 function initializeApiOptions() {
     app.use(cors())
 
@@ -30,36 +25,29 @@ function syncDb() {
 }
 
 function initializeDbs(callback) {
-
-    mysqlDb.initialize((userModel, cityModel, purchaseModel) => {
-        user = userModel
-        city = cityModel
-        purchase = purchaseModel
-        callback()
+    mysqlDb.initialize((mysqlModels) => {
+        callback(mysqlModels)
     })
     mongoDb.getDb((error, connection) => {
         mongoConnection = connection
     })
 }
 
-function initializeEndpoints() {
-
-    userEndpoints.initialize(app)
-    productEndpoints.initialize(app)
-    basketEndpoints.initialize(app)
+function initializeEndpoints(mysqlModels) {
+    userEndpoints.initialize(app, mysqlModels)
+    productEndpoints.initialize(app, mysqlModels)
+    basketEndpoints.initialize(app, mysqlModels)
 
     app.listen(api.port, () => {
         console.log(`[Node] Server listening on port ${api.port} ...`)
     })
 }
 
-
 function main() {
     initializeApiOptions()
-    initializeDbs(() => {
-        initializeEndpoints()
+    initializeDbs((mysqlModels) => {
+        initializeEndpoints(mysqlModels)
     })
     
 }
-
 main();

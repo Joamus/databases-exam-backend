@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 
 module.exports = {
-        email: {type: Sequelize.STRING, allowNull: false},
+        email: {type: Sequelize.STRING, allowNull: false, unique: true},
         password: {type: Sequelize.STRING, allowNull: false},
         address: {type: Sequelize.STRING, allowNull: false},
         role: {type: Sequelize.STRING, allowNull: false, defaultValue: '0'},
