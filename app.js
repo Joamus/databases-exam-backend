@@ -42,7 +42,7 @@ function initializeDbs(callback) {
 }
 
 function initializeEndpoints(mysqlModels) {
-    userEndpoints.initialize(app, mysqlModels)
+    userEndpoints.initialize(app, mysqlModels, mysqlDb)
     productEndpoints.initialize(app, mysqlModels)
     basketEndpoints.initialize(app, mysqlModels)
 
