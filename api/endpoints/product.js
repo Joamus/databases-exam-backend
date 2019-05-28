@@ -1,3 +1,5 @@
+const auth = require('../auth/auth')
+
 let app
 let mysqlModels
 
@@ -21,20 +23,20 @@ function getProduct() {
 }
 
 function deleteProduct() {
-    app.delete('/api/product/:productId', (req, res) => {
+    app.delete('/api/product/:productId', auth.requireRole(["1"]), (req, res) => {
 
     })
 
 }
 
 function postProduct() {
-    app.post('/api/product', (req, res) => {
+    app.post('/api/product', auth.requireRole(["1"]), (req, res) => {
 
     })
 }
 
 function updateProduct() {
-    app.post('/api/product/:productId', (req, res) => {
+    app.post('/api/product/:productId', auth.requireRole(["1"]), (req, res) => {
         res.send('updateProduct')
 
     })
