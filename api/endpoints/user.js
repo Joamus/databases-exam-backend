@@ -15,7 +15,6 @@ module.exports.initialize = function (newApp, newMysqlModels) {
 
 
 function getUser() {
-    
 
 }
 
