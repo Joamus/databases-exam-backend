@@ -75,7 +75,7 @@ async function synchronizeModels(user, city, purchase) {
 async function seedTables(user, purchase) {
   await userSeed.seed(user)
   await purchaseSeed.seed(purchase)
-
+  
 }
 
 function makeTableAssociations(user, city, purchase) {

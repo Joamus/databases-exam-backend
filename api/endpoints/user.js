@@ -1,3 +1,6 @@
+const auth = require('../auth/auth')
+
+
 let app
 let mysqlModels
 let mysqlDb
@@ -7,12 +10,43 @@ module.exports.initialize = function (newApp, newMysqlModels, newMysqlDb) {
     mysqlModels = newMysqlModels
     mysqlDb = newMysqlDb
 
+    login()
     getUser()
     deleteUser()
     updateUser()
     createUser()
     getAllUsers()
     resetUserPassword()
+}
+
+function login() {
+    app.post('/api/login', (req, res) => {
+        if(req.body.email && req.body.password) {
+            mysqlModels.user.findOne({
+            where: {
+                email: req.body.email,
+                password: req.body.password
+            },
+            attributes: ['id', 'email', 'role']
+            })
+            .then(user => {
+                let jsonUser = JSON.parse(JSON.stringify(user))
+                console.log(jsonUser)
+                let token = auth.generateToken(jsonUser)
+                jsonUser.token = token;
+                console.log(auth.verifyToken(token))
+                res.send(jsonUser);
+            })
+            .catch(error => {
+                res.status(404).json({message: "Invalid credentials"});
+            })
+        } else {
+            res.status(404).json({message: "Invalid credentials"});
+        }
+
+    })
+    
+    
 }
 
 
