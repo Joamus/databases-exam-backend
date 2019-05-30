@@ -12,15 +12,23 @@ module.exports.getDb = function(callback) {
         console.log("[MongoDB] Connected ...");
         const connection = client.db(mongodb.db)
 
-        createIndexes(connection)
-        seedDb(connection)
-        callback(err, connection)
+        createIndexes(connection, () => {
+          seedDb(connection)
+          callback(err, connection)
+
+        })
+        
       });
 
 }
 
-function createIndexes(db) {
-  db.collection('products').createIndex({name: "text"}, {unique: true})
+function createIndexes(db, callback) {
+  db.collection('products').createIndex({name: 1}, {unique: true})
+  .then((result) => {
+    callback()
+  }).catch((err, result) => {
+    callback()
+  })
 
 }
 

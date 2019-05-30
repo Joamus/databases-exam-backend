@@ -1,13 +1,9 @@
 const Product = require('../models/product')
+const dummyProducts = require('./dummy_products')
 
 module.exports.seed = function(db) {
-    db.collection('products').insertMany([
-        new Product("Settlers from Catan", "A board game about bargaining, exploring, and fierce rivalry", 250, 57.5, 30),
-        new Product("Spyfall", "Ever wanted to be James Bond, but you don't like martinis and violence? You prefer lying to your friends? Play spyfall then!", 301.50, 180.31, 12),
-        new Product("Monopoly", "Do you love capitalism? Do you also want to ruin your family? Play this game, or communism will win", 450.99, 171.20, 38),
-        new Product("Cluedo", "Who killed the landlord? The butcher? The butler? The bambi? Who knows! What a mystery...", 666, 180, 83),
-        new Product("Ludo", "A game about skill", 125, 10)
-    ])
+    db.collection('products').insertMany(dummyProducts)
+
     .then((result) => {
         console.log("[MongoDB] Products seeded ...")
 
