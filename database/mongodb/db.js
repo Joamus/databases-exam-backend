@@ -20,7 +20,7 @@ module.exports.getDb = function(callback) {
 }
 
 function createIndexes(db) {
-  db.collection('product').createIndex({name: "text"}, {unique: true})
+  db.collection('products').createIndex({name: "text"}, {unique: true})
 
 }
 

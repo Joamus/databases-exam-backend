@@ -30,6 +30,7 @@ function login() {
             attributes: ['id', 'email', 'role']
             })
             .then(user => {
+                console.log(user)
                 let jsonUser = JSON.parse(JSON.stringify(user))
                 let token = auth.generateToken(jsonUser)
                 jsonUser.token = token;
