@@ -1,6 +1,5 @@
 const auth = require('../auth/auth')
 
-
 let app
 let mysqlModels
 let mysqlDb
@@ -22,41 +21,45 @@ module.exports.initialize = function (newApp, newMysqlModels, newMysqlDb) {
 function login() {
     app.post('/api/login', (req, res) => {
         if(req.body.email && req.body.password) {
-            mysqlModels.user.findOne({
-            where: {
-                email: req.body.email,
-                password: req.body.password
-            },
-            attributes: ['id', 'email', 'role']
-            })
-            .then(user => {
-                let jsonUser = JSON.parse(JSON.stringify(user))
-                let token = auth.generateToken(jsonUser)
-                jsonUser.token = token;
-                res.send(jsonUser);
-            })
-            .catch(error => {
+            mysqlDb.db.query('CALL authenticate_user (:v_email, :v_password)',
+            { replacements: { v_email: req.body.email, v_password: req.body.password }})
+            .spread(user => {
+                if (user) {
+                    let jsonUser = JSON.parse(JSON.stringify(user))
+                    let token = {
+                        "firstName": user.first_name,
+                        "lastName": user.last_name,
+                        "token": auth.generateToken(jsonUser)
+                    }
+                    res.send(token);
+                } else {
+                    res.status(404).json({message: "Invalid credentials"});
+                }
+            }) 
+            .catch(() => {
                 res.status(404).json({message: "Invalid credentials"});
-            })
+            });
         } else {
             res.status(404).json({message: "Invalid credentials"});
         }
-
     })
-    
-    
 }
 
 
 function getUser() {
 
     app.get('/api/users/:userId', auth.requireRole(["1"]), (req, res) => {
-        mysqlModels.user.findOne({ where: { id: req.params.userId }})
-        .then(queryRes => {
-            res.send(queryRes)
+        mysqlDb.db.query('CALL get_user (:v_user_id)',
+        { replacements: { v_user_id: req.params.userId }})
+        .spread(user => {
+            if (user) {
+                res.send(user);
+            } else {
+                res.status(404).json({message: "No user with id: " + req.params.userId});
+            }
         })
         .catch(error => {
-            res.send(error)
+            res.status(404).json({message: error});
         })
     })
 }
@@ -80,32 +83,42 @@ function updateUser() {
 }
 
 function createUser() {
-    app.post('/api/users/create', auth.requireRole(["1"]), (req, res) => {
-        mysqlModels.user.create({
-            "email": req.body.email,
-            "password": req.body.password,
-            "address": req.body.address,
-            "first_name": req.body.first_name,
-            "last_name": req.body.last_name,
-            "will_delete_at": null
-        })
-        .then(() => {
-            res.send('user created')
+    app.post('/api/users', auth.requireRole(["1"]), (req, res) => {
+        mysqlDb.db.query('CALL create_user (:v_email, :v_password, :v_address, :v_role, :v_first_name, :v_last_name, :v_city_postal)',
+        { replacements: { 
+            v_email: req.body.email,
+            v_password: req.body.password,
+            v_address: req.body.address,
+            v_role: req.body.role,
+            v_first_name: req.body.first_name,
+            v_last_name: req.body.last_name,
+            v_city_postal: req.body.city_postal
+        }})
+        .spread(queryRes => {
+            if (queryRes[Object.getOwnPropertyNames(queryRes)[0]] === 1) {
+                res.send('User created successfully')
+            } else {
+                res.send('User could not be created')
+            }
         })
         .catch(error => {
-            res.send(error)
+            res.status(500).send(error)
         })
     })
 }
 
 function getAllUsers() {
     app.get('/api/users', auth.requireRole(["1"]), (req, res) => {
-        mysqlModels.user.findAll()
-        .then(queryRes => {
-            res.send(queryRes)
+        mysqlDb.db.query('CALL get_users ()')
+        .spread(users => {
+            if (users) {
+                res.send(users);
+            } else {
+                res.status(404).json({message: "No existing users"});
+            }
         })
         .catch(error => {
-            res.send(error)
+            res.status(404).json({message: error});
         })
     })
 }
