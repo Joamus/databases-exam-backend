@@ -35,7 +35,7 @@ function verifyToken(token) {
 }
 
 function authenticateRequest(req, res, next) {
-    if (req.path == '/api/login') {
+    if (req.path == '/api/login' || req.path == "/api/user") {
       return next();
     }
     let decoded

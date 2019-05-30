@@ -86,6 +86,22 @@ function findProductsByName(products, callback) {
          })
 }
 
+function subtractStock(products, i, callback) {
+    if (i < products.length) {
+        mongoDb.collection('products').find({"name": products[i].name}, (err, result) => {
+            let existingStock = result.existingStock
+            let newAmount = existingStock-products[i].amount
+            mongoDb.collection('products').updateOne({"name": products[i].name}, {
+                $set: {"amount": newAmount}
+            }, (err, result) => {
+                if (err) throw err
+                subtractStock(products, i, subtractedAmount, callback)
+            })
+    })
+    }
+    callback()
+}
+
 
 
 module.exports = {
