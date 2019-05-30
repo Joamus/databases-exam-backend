@@ -15,5 +15,13 @@ module.exports = {
     willDeleteAt: {
         field: 'will_delete_at',
         type: Sequelize.DATE
+    },
+    grossAmount: {
+        field: 'gross_amount',
+        type: Sequelize.DECIMAL
+    },
+    netAmount: {
+        field: 'net_amount',
+        type: Sequelize.DECIMAL
     }
 }
