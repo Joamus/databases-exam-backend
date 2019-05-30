@@ -10,4 +10,4 @@ BEGIN
 RETURN SHA2(v_new_password, 256);
 END; //
 
-DELIMITER ;
+DELIMITER;

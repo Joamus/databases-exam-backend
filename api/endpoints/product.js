@@ -77,9 +77,7 @@ function findProductsByName(products, callback) {
             }, 
         
          ).project({
-            "name": 1,
-            "price": 1,
-            "retailPrice": 1,
+            "amount": 0
         }).toArray((err, result) => {
              if (err) throw err
              callback(err, result)

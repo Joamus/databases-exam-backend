@@ -10,18 +10,24 @@ const purchaseSchema = require('./models/purchase')
 const userSeed = require('./seeds/user')
 const purchaseSeed = require('./seeds/purchase')
 
+const fs = require('fs')
+const path = require('path')
+
+
 
 // I module.export everything at the bottom
 let user
 let city
 let purchase
+let db
 
 const options = { 
   freezeTableName: true, 
   underscored: true,
 }
 
-db = new Sequelize(mysql.dbName, mysql.username, mysql.password, {
+function createDb(callback) {
+  tempDb = new Sequelize("", mysql.username, mysql.password, {
   define: {
     charset: 'utf8',
     collate: 'utf8_general_ci'
@@ -29,12 +35,33 @@ db = new Sequelize(mysql.dbName, mysql.username, mysql.password, {
   host: mysql.host,
   dialect: mysql.dialect,
   logging: false,
-});
+})
+  tempDb.query('CREATE DATABASE IF NOT EXISTS db_exam;').then((result) => {
+    console.log('[MySQL] Database db_exam created')
+    callback()
+  })
+  .catch((error, result) => {
+    console.log('[MySQL] Database not created')
+    callback()
+
+  })
+
+}
 
 
 
 async function authenticateDb(callback) {
-  db.authenticate()
+  createDb(() => {
+    db = new Sequelize(mysql.dbName, mysql.username, mysql.password, {
+      define: {
+        charset: 'utf8',
+        collate: 'utf8_general_ci'
+      },
+      host: mysql.host,
+      dialect: mysql.dialect,
+      logging: false,
+    });
+    db.authenticate()
   .then(() => {
     console.log('[MySQL] Connected ...');
     callback()
@@ -42,6 +69,12 @@ async function authenticateDb(callback) {
   .catch(err => {
     console.error('Unable to connect to the database:', err);
   });
+
+  })
+  
+  
+
+  
 }
 
 function initialize (callback) {
