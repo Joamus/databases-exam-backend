@@ -104,7 +104,7 @@ function updateUser() {
 }
 
 function createUser() {
-    app.post('/api/users', (req, res) => {
+    app.post('/api/register', (req, res) => {
         mysqlModels.user.create({
             "email": req.body.email,
             "password": req.body.password,
