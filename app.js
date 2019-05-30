@@ -19,6 +19,8 @@ let purchase
 
 
 function initializeApiOptions() {
+
+    
     app.use(cors())
     // support parsing of application/json type post data
     app.use(bodyParser.json());
