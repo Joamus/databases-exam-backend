@@ -114,10 +114,10 @@ function createUser() {
             "willDeleteAt": null
         })
             .then(() => {
-                res.send('user created')
+                res.status(201).json({message: 'User registered'})
             })
             .catch(error => {
-                res.status(500).send(error)
+                res.status(500).json(error)
             })
     })
 }
@@ -140,7 +140,7 @@ function resetUserPassword() {
             mysqlDb.db.query('CALL reset_password (:user_id)',
             { replacements: { user_id: req.params.userId } })
             .then(() => {
-                res.send('The password has been reset successfully.')
+                res.status(200).json({message: 'The password has been reset successfully.'})
             })
             .catch(error => {
                 res.status(500).send(error)

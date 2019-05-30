@@ -1,4 +1,4 @@
-user_before_insert
+USE db_exam;
 
 DELIMITER //
 

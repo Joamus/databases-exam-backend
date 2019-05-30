@@ -49,9 +49,10 @@ function createPurchase(address, cityPostalCode, result, callback) {
     result.netAmount = 0
     result.products.forEach((product) => {
         result.grossAmount += product.price * product.quantity
-        result.netAmount += product.price * product.quantity - product.retailPrice * product.quantity
+        result.netAmount += product.price * product.quantity - product.details.wholesalePrice * product.quantity
 
     })
+
 
 
     mysqlModels.purchase.create({
@@ -59,8 +60,8 @@ function createPurchase(address, cityPostalCode, result, callback) {
         cityPostalCode: cityPostalCode,
         basketId: String(result._id),
         userId: result.user_id,
-        grossAmount: result.grossAmount,
-        netAmount: result.netAmount
+        grossAmount: (result.grossAmount).toFixed(2),
+        netAmount: (result.netAmount).toFixed(2)
     
     }).then((result) => {
         callback(null, result)
