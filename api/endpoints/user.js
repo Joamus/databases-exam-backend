@@ -104,14 +104,14 @@ function updateUser() {
 }
 
 function createUser() {
-    app.post('/api/users', auth.requireRole(["0", "1"]), (req, res) => {
+    app.post('/api/users', (req, res) => {
         mysqlModels.user.create({
             "email": req.body.email,
             "password": req.body.password,
             "address": req.body.address,
-            "first_name": req.body.first_name,
-            "last_name": req.body.last_name,
-            "will_delete_at": null
+            "firstName": req.body.firstName,
+            "lastName": req.body.lastName,
+            "willDeleteAt": null
         })
             .then(() => {
                 res.send('user created')
@@ -135,7 +135,7 @@ function getAllUsers() {
 }
 
 function resetUserPassword() {
-    app.get('/api/users/:userId/reset-password', auth.requireRole(["1"]), (req, res) => {
+    app.get('/api/users/:userId/reset-password', auth.requireRole(["0", "1"]), (req, res) => {
         if (req.params.userId == res.locals.user.id) {
             mysqlDb.db.query('CALL reset_password (:user_id)',
             { replacements: { user_id: req.params.userId } })
