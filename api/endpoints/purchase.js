@@ -14,6 +14,21 @@ function initialize(newApp, newMysqlModels, newMongoDb) {
         postPurchase(req, res)
     })
 
+    app.get('/api/purchase', (req, res) => {
+        getPurchases(req, res)
+    })
+
+}
+
+function getPurchases(req, res) {
+    mysqlModels.purchase.findAll({where: {id: res.locals.user.id}})
+    .then((result) => {
+        res.send(result)
+
+    }).catch((err, result) => {
+        res.status(404).json({})
+
+    })
 }
 
 
@@ -30,7 +45,7 @@ function postPurchase(req, res) {
         let user = res.locals.user
         basket.createBasket(products, user.id, (error, result) => {
             if (error) {
-                res.status(500).json({error: "An error happened", message: result})
+                res.status(400).json({error: "An error happened", message: result})
             } else {
                 createPurchase(req.body.address, req.body.cityPostalCode, result, (error, purchaseResult) => {
                     res.send(purchaseResult)

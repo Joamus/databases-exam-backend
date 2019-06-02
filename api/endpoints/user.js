@@ -10,11 +10,15 @@ module.exports.initialize = function (newApp, newMysqlModels, newMysqlDb) {
     mysqlModels = newMysqlModels
     mysqlDb = newMysqlDb
 
+
+    app.post('/api/register', (req, res) => {
+        createUser(req, res)
+    })
+
     login()
     getUser()
     deleteUser()
     updateUser()
-    createUser()
     getAllUsers()
     resetUserPassword()
 }
@@ -103,23 +107,21 @@ function updateUser() {
     })
 }
 
-function createUser() {
-    app.post('/api/register', (req, res) => {
-        mysqlModels.user.create({
-            "email": req.body.email,
-            "password": req.body.password,
-            "address": req.body.address,
-            "firstName": req.body.firstName,
-            "lastName": req.body.lastName,
-            "willDeleteAt": null
-        })
-            .then(() => {
-                res.status(201).json({message: 'User registered'})
-            })
-            .catch(error => {
-                res.status(500).json(error)
-            })
+function createUser(req, res) {
+    mysqlModels.user.create({
+        "email": req.body.email,
+        "password": req.body.password,
+        "address": req.body.address,
+        "firstName": req.body.firstName,
+        "lastName": req.body.lastName,
+        "willDeleteAt": null
     })
+        .then(() => {
+            res.status(201).json({message: 'User registered'})
+        })
+        .catch(error => {
+            res.status(500).json(error)
+        })
 }
 
 function getAllUsers() {
