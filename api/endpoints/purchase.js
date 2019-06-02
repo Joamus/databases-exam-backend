@@ -10,18 +10,18 @@ function initialize(newApp, newMysqlModels, newMongoDb) {
     mysqlModels = newMysqlModels
     mongoDb = newMongoDb
 
-    app.post('/api/purchase', (req, res) => {
+    app.post('/api/purchases', (req, res) => {
         postPurchase(req, res)
     })
 
-    app.get('/api/purchase', (req, res) => {
+    app.get('/api/purchases', (req, res) => {
         getPurchases(req, res)
     })
 
 }
 
 function getPurchases(req, res) {
-    mysqlModels.purchase.findAll({where: {id: res.locals.user.id}})
+    mysqlModels.purchase.findAll({where: {user_id: res.locals.user.id}})
     .then((result) => {
         res.send(result)
 

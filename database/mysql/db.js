@@ -51,6 +51,7 @@ function createDb(callback) {
 
 
 async function authenticateDb(callback) {
+  if (!db) {
   createDb(() => {
     db = new Sequelize(mysql.dbName, mysql.username, mysql.password, {
       define: {
@@ -71,7 +72,9 @@ async function authenticateDb(callback) {
   });
 
   })
-  
+} else {
+  callback()
+}
   
 
   
@@ -88,7 +91,7 @@ function initialize (callback) {
         seedTables(user, purchase)
 
         let models = {
-          user, city, purchase
+          user, city, purchase, db
         }
         callback(models)
       })

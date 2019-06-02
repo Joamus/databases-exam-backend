@@ -8,25 +8,40 @@ function initialize(newApp, newMysqlModels, mongoConnection) {
     mysqlModels = newMysqlModels
     mongoDb = mongoConnection
 
-    app.get('/api/basket/:basketId', (req, res) => {
-        getBasket()
+    app.get('/api/baskets', (req, res) => {
+        getAllBaskets(req, res)
+    })
+
+    app.get('/api/baskets/:basketId', (req, res) => {
+        getBasket(req, res)
 
     })
 
-    app.delete('/api/basket/:basketId', (req, res) => {
-        deleteBasket()
+    app.delete('/api/baskets/:basketId', (req, res) => {
+        deleteBasket(req, res)
 
     })
 
-    app.post('/api/basket', (req, res) => {
+    app.post('/api/baskets', (req, res) => {
         postBasket(req, res)
     })
 
 }
 
-function getBasket() {
+function getBasket(req, res) {
+    mongoDb.collection('baskets').find({_id: req.params.basketId}, (err, result) => {
+        if (err) throw err;
+        res.send(result)
+    })
     
 
+}
+
+function getAllBaskets(req, res) {
+    mongoDb.collection('baskets').find({user_id: res.locals.user.id}).toArray((err, result) => {
+        if (err) throw err;
+        res.send(result)
+    })
 }
 
 function deleteBasket() {
@@ -40,7 +55,7 @@ function postBasket(req, res) {
 }
 
 function createBasket(products, userId, callback) {
-    mongoDb.collection('basket').insertOne(
+    mongoDb.collection('baskets').insertOne(
         {
             "user_id": userId,
             "products": products

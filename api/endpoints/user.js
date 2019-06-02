@@ -4,18 +4,24 @@ const auth = require('../auth/auth')
 let app
 let mysqlModels
 let mysqlDb
+let mongoDb
 
-module.exports.initialize = function (newApp, newMysqlModels, newMysqlDb) {
+module.exports.initialize = function(newApp, newMysqlModels, newMysqlDb, newMongoConnection) {
     app = newApp
     mysqlModels = newMysqlModels
     mysqlDb = newMysqlDb
+    mongoDb = newMongoConnection
 
 
     app.post('/api/register', (req, res) => {
         createUser(req, res)
     })
 
-    login()
+    app.post('/api/login', (req, res) => {
+        login(req, res)
+
+    })
+
     getUser()
     deleteUser()
     updateUser()
@@ -23,31 +29,30 @@ module.exports.initialize = function (newApp, newMysqlModels, newMysqlDb) {
     resetUserPassword()
 }
 
-function login() {
-    app.post('/api/login', (req, res) => {
-        if (req.body.email && req.body.password) {
-            mysqlDb.db.query('CALL authenticate_user (:v_email, :v_password)',
-                { replacements: { v_email: req.body.email, v_password: req.body.password } })
-                .spread(user => {
-                    if (user) {
-                        let jsonUser = JSON.parse(JSON.stringify(user))
-                        let token = {
-                            "firstName": user.first_name,
-                            "lastName": user.last_name,
-                            "token": auth.generateToken(jsonUser)
-                        }
-                        res.send(token);
-                    } else {
-                        res.status(404).json({ message: "Invalid credentials" });
+function login(req, res) {
+    
+    if (req.body.email && req.body.password) {
+        mysqlModels.db.query('CALL authenticate_user (:v_email, :v_password)',
+            { replacements: { v_email: req.body.email, v_password: req.body.password } })
+            .spread(user => {
+                if (user) {
+                    let jsonUser = JSON.parse(JSON.stringify(user))
+                    let token = {
+                        "firstName": user.first_name,
+                        "lastName": user.last_name,
+                        "token": auth.generateToken(jsonUser)
                     }
-                })
-                .catch(() => {
+                    res.send(token);
+                } else {
                     res.status(404).json({ message: "Invalid credentials" });
-                });
-        } else {
-            res.status(404).json({ message: "Invalid credentials" });
-        }
-    })
+                }
+            })
+            .catch(() => {
+                res.status(404).json({ message: "Invalid credentials" });
+            });
+    } else {
+        res.status(404).json({ message: "Invalid credentials" });
+    }
 }
 
 
@@ -70,7 +75,7 @@ function getUser() {
 function deleteUser() {
     app.delete('/api/users/:userId', auth.requireRole(["0", "1"]), (req, res) => {
         if (req.params.userId == res.locals.user.id) {
-            mysqlModels.user.update({ "willDeleteAt": new Date().setFullYear(new Date().getFullYear() + 2)}, {
+            mysqlModels.user.update({"willDeleteAt": new Date().setFullYear(new Date().getFullYear() + 2)}, {
                 where: {
                     id: req.params.userId
                 }
