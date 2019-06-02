@@ -9,37 +9,45 @@ function initialize(newApp, newMysqlModels, newMongoConnection) {
     mysqlModels = newMysqlModels
     mongoDb = newMongoConnection
 
-    app.get('/api/product', (req, res) => {
-        getProduct()
+    app.get('/api/products/:productId', (req, res) => {
+        getProduct(req, res)
 
     })
  
-    app.delete('/api/product/:productId', auth.requireRole(["1"]), (req, res) => {
-        deleteProduct()
+    app.delete('/api/products/:productId', auth.requireRole(["1"]), (req, res) => {
+        deleteProduct(req, res)
 
     })
     
-    app.post('/api/product', auth.requireRole(["1"]), (req, res) => {
-        postProduct()
+    app.post('/api/products', auth.requireRole(["1"]), (req, res) => {
+        postProduct(req, res)
 
     })
 
-    app.put('/api/product/:productId', auth.requireRole(["1"]), (req, res) => {
+    app.put('/api/products/:productId', auth.requireRole(["1"]), (req, res) => {
         res.send('updateProduct')
 
     })
 
-    app.get('/api/product', auth.requireRole(["1"], (req, res) => {
-        
-    }))
+    app.get('/api/products', (req, res) => {
+        getAllProducts(req, res)
+    })
     
-    
-    putProduct()
-    getAllProducts()
-
 }
 
-function getProduct() {
+function getAllProducts(req, res) {
+    console.log('geeeehjegeh')
+
+    mongoDb.collection('products').find({}).toArray((err, result) => {
+        if (err) throw err;
+        res.send(result)
+    })
+}
+
+function getProduct(req, res) {
+    mongoDb.collection('products').find({_id: req.params.productId}, (err, result) => {
+        res.send(result)
+    })
     
 }
 
@@ -54,11 +62,6 @@ function postProduct() {
 
 function putProduct() {
     
-}
-
-function getAllProducts() {
-
-
 }
 
 
