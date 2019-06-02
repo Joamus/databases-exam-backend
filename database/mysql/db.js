@@ -81,6 +81,7 @@ async function seedTables(user, purchase) {
 function makeTableAssociations(user, city, purchase) {
   user.belongsTo(city)
   purchase.belongsTo(city)
+  
   purchase.belongsTo(user)
 
 }
