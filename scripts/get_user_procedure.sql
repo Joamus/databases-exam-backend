@@ -1,6 +1,6 @@
 USE db_exam;
 
-DELIMITER $$
+DELIMITER //
 
 CREATE PROCEDURE get_user (
 	v_user_id INT
@@ -10,6 +10,6 @@ BEGIN
     FROM user a LEFT JOIN city b 
     ON a.city_postal_code = b.postal_code
     WHERE a.id = v_user_id;
-END; $$
+END; //
 
 DELIMITER ;
