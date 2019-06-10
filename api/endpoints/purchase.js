@@ -47,10 +47,16 @@ function postPurchase(req, res) {
             if (error) {
                 res.status(400).json({error: "An error happened", message: result})
             } else {
-                createPurchase(req.body.address, req.body.cityPostalCode, result, (error, purchaseResult) => {
-                    res.send(purchaseResult)
-
+                let i = 0
+                product.subtractStock(products, i, () => {
+                    res.send(products)
+                    createPurchase(req.body.address, req.body.cityPostalCode, result, (error, purchaseResult) => {
+                        res.send(purchaseResult)
+    
+                    })
+                    
                 })
+                
             }
 
         })

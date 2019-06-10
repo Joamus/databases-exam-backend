@@ -66,8 +66,9 @@ function createBasket(products, userId, callback) {
         callback(err, result.ops[0])
 
     })
-
 }
+
+
 
 module.exports = {
     initialize,
