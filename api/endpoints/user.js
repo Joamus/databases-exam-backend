@@ -119,6 +119,7 @@ function createUser(req, res) {
         "address": req.body.address,
         "firstName": req.body.firstName,
         "lastName": req.body.lastName,
+        "cityPostalCode": req.body.cityPostalCode,
         "willDeleteAt": null
     })
         .then(() => {
