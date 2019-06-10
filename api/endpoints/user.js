@@ -145,8 +145,7 @@ function getAllUsers() {
 function resetUserPassword() {
     app.get('/api/users/:userId/reset-password', auth.requireRole(["0", "1"]), (req, res) => {
         if (req.params.userId == res.locals.user.id) {
-            
-            mysqlDb.db.query('CALL reset_password (:user_id)',
+            mysqlModels.db.query('CALL reset_password (:user_id)',
             { replacements: { user_id: req.params.userId } })
             .then(() => {
                 res.status(200).json({message: 'The password has been reset successfully.'})
