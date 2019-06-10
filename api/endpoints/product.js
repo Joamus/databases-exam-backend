@@ -36,7 +36,7 @@ function initialize(newApp, newMysqlModels, newMongoConnection) {
 }
 
 function getAllProducts(req, res) {
-    mongoDb.collection('products').find({}).toArray((err, result) => {
+    mongoDb.collection('products').find({}).project({details: 0}).toArray((err, result) => {
         if (err) throw err;
         res.send(result)
     })
