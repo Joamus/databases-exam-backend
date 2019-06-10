@@ -36,8 +36,6 @@ function initialize(newApp, newMysqlModels, newMongoConnection) {
 }
 
 function getAllProducts(req, res) {
-    console.log('geeeehjegeh')
-
     mongoDb.collection('products').find({}).toArray((err, result) => {
         if (err) throw err;
         res.send(result)

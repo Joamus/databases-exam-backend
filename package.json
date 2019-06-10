@@ -9,7 +9,7 @@
   "author": "Joakim O. Andersen, Anders Tofte, Nicklas Hermann, Daniel Bøbel, Casper B. Arnesen",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "eslint": "^5.16.0",
@@ -17,6 +17,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.2.4",
     "mysql2": "^1.6.5",
-    "sequelize": "^5.8.5"
+    "sequelize": "^5.8.8"
   }
 }
